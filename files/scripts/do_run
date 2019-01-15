@@ -1,0 +1,18 @@
+#!/bin/bash
+
+_files=$(find "/" -maxdepth 1 -type f -iname "*_config" | sort)
+
+if [ -z "$_files" ]
+then
+    echo "loading default"
+    source configs/default_config
+else
+    while read file 
+    do
+        echo "loading config file $file"
+        source $file
+    done <<< $_files
+fi 
+
+eval $_entrypoint
+
