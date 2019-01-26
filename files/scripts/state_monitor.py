@@ -178,8 +178,8 @@ class EventProcessor():
         self.thresholder = Thresholder(self.servers, 'bout')
         self.thresholder.getters = [self.power_monitor.getProbability, self.entropy_monitor.getProbability]
     
-        #self.tasks = [self.power_monitor, self.power_listener, self.entropy_monitor, self.entropy_listener, self.thresholder]
-        self.tasks = [self.power_monitor, self.power_listener, self.thresholder]
+        self.tasks = [self.power_monitor, self.power_listener, self.entropy_monitor, self.entropy_listener, self.thresholder]
+        #self.tasks = [self.power_monitor, self.power_listener, self.thresholder]
 
     def signal_handler(self, sig, frame):
         print 'Signal trapped. Stopping tasks'
