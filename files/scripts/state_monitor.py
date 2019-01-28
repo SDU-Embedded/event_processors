@@ -12,9 +12,9 @@ class StateMonitor(threading.Thread):
 
         self.state = False
         self.probability = 0.0
-        self.on_gain = 5.0
-        self.off_gain = 1.0
-        self.max = 100.0
+        self.on_gain = 0.10
+        self.off_gain = 0.10
+        self.max = 50.0
         self.min = 0.0
         self.period = 0.01
 
