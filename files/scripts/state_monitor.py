@@ -142,7 +142,7 @@ class Thresholder(threading.Thread):
             for getter in self.getters:
                 probability = probability + getter()
             
-            #print str(probability)
+            print str(probability)
             if self.state:
                 if probability < self.downwards_threshold:
                     self.state = False
