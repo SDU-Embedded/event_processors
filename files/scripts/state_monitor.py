@@ -12,9 +12,9 @@ class StateMonitor(threading.Thread):
 
         self.state = False
         self.probability = 0.0
-        self.on_gain = 0.10
-        self.off_gain = 0.10
-        self.max = 50.0
+        self.on_gain = float(sys.argv[1])
+        self.off_gain = float(sys.argv[2])
+        self.max = 100.0
         self.min = 0.0
         self.period = 0.01
 
@@ -130,8 +130,8 @@ class Thresholder(threading.Thread):
 
         self.getters = None
 
-        self.upwards_threshold = 15.0
-        self.downwards_threshold = 5.0
+        self.upwards_threshold = float(sys.argv[3])
+        self.downwards_threshold = float(sys.argv[4])
         self.period = 0.01
         
         self.event_parser = EventParser(servers, topic)
@@ -141,8 +141,9 @@ class Thresholder(threading.Thread):
             probability = 0.0
             for getter in self.getters:
                 probability = probability + getter()
-            
+            probability = probability / len(self.getters)
             print str(probability)
+            
             if self.state:
                 if probability < self.downwards_threshold:
                     self.state = False

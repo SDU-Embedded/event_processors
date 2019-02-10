@@ -1,1 +1,1 @@
-export _entrypoint="python /scripts/state_monitor.py"
+export _entrypoint="python /scripts/bout_detector.py"
