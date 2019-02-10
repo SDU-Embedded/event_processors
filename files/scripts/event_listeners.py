@@ -47,6 +47,19 @@ class OnOffEventListener(EventListener):
             self.stateTransitionCallback(False)
 
 
+class PerchEventListener(EventListener):
+    def __init__(self, servers='', topic='', bird=''):
+        EventListener.__init__(self, servers, topic)
+        self.stateTransitionCallback = None
+        self.bird = bird
+
+    def evaluate_event(self):
+        if self.event['data']['position'] == 'FRONT' and self.event['data']['id'] == self.bird:
+            self.stateTransitionCallback(True)
+        else:
+            self.stateTransitionCallback(False)
+
+
 if __name__ == "__main__":
     listener = EventListener('manna,hou,bisnap','power')
 

@@ -1,8 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from event_parsers import EventParser
-
 class Thresholder():
     def __init__(self, upwards_threshold=0.0, downwards_threshold=0.0):
         self.state = False
