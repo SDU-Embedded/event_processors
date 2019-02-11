@@ -11,8 +11,8 @@ from event_emitters import EventEmitter
 
 if __name__ == "__main__":
 
-    cage1_event_listener = PerchEventListener('manna,hou,bisnap','perch_sensor',1 )
-    cage2_event_listener = PerchEventListener('manna,hou,bisnap','perch_sensor',2 )
+    cage1_event_listener = PerchEventListener('manna,hou,bisnap','perch_sensor',bird=1 )
+    cage2_event_listener = PerchEventListener('manna,hou,bisnap','perch_sensor',bird=2 )
  
     # Setup event listeners
     #cage1_event_listener = PerchEventListener( servers='manna,hou,bisnap', topic='perch_sensor', bird=1 )
@@ -30,7 +30,7 @@ if __name__ == "__main__":
     metric_processor.getters.append( cage2_state_monitor.getProbability )
     
     # Setup thresholders
-    thresholder = Thresholder( upwards_threshold=0.85, downwards_threshold=0.50 )
+    thresholder = Thresholder( upwards_threshold=1.0, downwards_threshold=0.55 )
     metric_processor.setters.append( thresholder.evaluate )
     
     # Setup event builders
@@ -38,7 +38,7 @@ if __name__ == "__main__":
     thresholder.emitEvent = builder.evaluate
 
     # Setup event emitters
-    emitter = EventEmitter( 'manna,hou,bisnap','contact')
+    emitter = EventEmitter( 'manna,hou,bisnap','ats_contact')
     builder.send = emitter.send
     
     # Setup and run event processor

@@ -59,13 +59,16 @@ class PerchEventListener(EventListener):
         if self.debug:
             print "Perch event listener for bird " + str(self.bird) + " received event"
         
-        if self.event['data']['duration'] == 0.0: 
-            if self.event['data']['position'] == 'FRONT' and self.event['data']['id'] == self.bird:
-                if self.debug:
-                    print "Bird " + str(self.bird) + " is perched"
-                self.stateTransitionCallback(True)
-            else:
-                self.stateTransitionCallback(False)
+        if self.event['data']['duration'] == 0.0:
+            if int( self.event['data']['id'] ) == self.bird:
+                if self.event['data']['position'] == 'FRONT':
+                    if self.debug:
+                        print "Bird " + str(self.bird) + " perched"
+                    self.stateTransitionCallback(True)
+                else:
+                    if self.debug:
+                        print "Bird " + str(self.bird) + " not perched"
+                    self.stateTransitionCallback(False)
 
     def print_state(self, state):
         print "Perch event listener for bird " + str(self.bird) + " attempted state change to " +str(state)

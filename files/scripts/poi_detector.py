@@ -13,12 +13,12 @@ if __name__ == "__main__":
 
     
     # Setup event listeners
-    power_event_listener = OnOffEventListener( servers='manna,hou,bisnap', topic='power' )
-    entropy_event_listener = OnOffEventListener( servers='manna,hou,bisnap', topic='entropy' )
+    contact_event_listener = OnOffEventListener( servers='manna,hou,bisnap', topic='ats_contact' )
+    bout_event_listener = OnOffEventListener( servers='manna,hou,bisnap', topic='ats_bout' )
     
     # Setup state monitors
-    power_state_monitor = TwoLevelStateMonitor( period=0.01, upwards_gain=0.03, downwards_gain=0.005 )
-    entropy_state_monitor = TwoLevelStateMonitor( period=0.01, upwards_gain=0.03, downwards_gain=0.005 )
+    power_state_monitor = TwoLevelStateMonitor( period=0.01, upwards_gain=1.0, downwards_gain=0.1 )
+    entropy_state_monitor = TwoLevelStateMonitor( period=0.01, upwards_gain=1.0, downwards_gain=0.1 )
     
     power_event_listener.stateTransitionCallback = power_state_monitor.setState
     entropy_event_listener.stateTransitionCallback = entropy_state_monitor.setState
@@ -30,15 +30,15 @@ if __name__ == "__main__":
     metric_processor.getters.append( entropy_state_monitor.getProbability )
     
     # Setup thresholders
-    thresholder = Thresholder( upwards_threshold=0.85, downwards_threshold=0.50 )
+    thresholder = Thresholder( upwards_threshold=1.0, downwards_threshold=0.55 )
     metric_processor.setters.append( thresholder.evaluate )
     
     # Setup event builders
-    builder = EventBuilder( bird="1", type="bout" )
+    builder = EventBuilder( type="poi" )
     thresholder.emitEvent = builder.evaluate
 
     # Setup event emitters
-    emitter = EventEmitter( servers='manna,hou,bisnap', topic='ats_bout')
+    emitter = EventEmitter( servers='manna,hou,bisnap', topic='ats_poi')
     builder.send = emitter.send
     
     # Setup and run event processor

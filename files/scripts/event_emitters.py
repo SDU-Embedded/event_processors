@@ -11,4 +11,4 @@ class EventEmitter():
 
     def send(self, dat):
         print (dat)
-        #self.producer.send(self.topic, dat.encode())
+        self.producer.send(self.topic, dat.encode())

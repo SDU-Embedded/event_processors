@@ -12,11 +12,11 @@ class Thresholder():
 
     def evaluate(self, probability):
         if self.state:
-            if probability < self.downwards_threshold:
+            if probability <= self.downwards_threshold:
                 self.state = False
                 self.emitEvent('offset')
         else:
-            if probability > self.upwards_threshold:
+            if probability >= self.upwards_threshold:
                 self.state = True
                 self.emitEvent('onset')
 
