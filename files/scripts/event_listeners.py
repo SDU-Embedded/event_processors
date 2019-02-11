@@ -34,7 +34,6 @@ class EventListener(threading.Thread):
     def evaluate_event(self):
         print self.event
 
-
 class OnOffEventListener(EventListener):
     def __init__(self, servers='', topic=''):
         EventListener.__init__(self, servers, topic)
@@ -48,23 +47,42 @@ class OnOffEventListener(EventListener):
 
 
 class PerchEventListener(EventListener):
-    def __init__(self, servers='', topic='', bird=''):
+    def __init__(self, servers='', topic='', bird=0, debug=False):
         EventListener.__init__(self, servers, topic)
-        self.stateTransitionCallback = None
-        self.bird = bird
+        self.stateTransitionCallback = self.print_state
+        self.bird = int(bird)
+        self.debug = debug
+        if self.debug:
+            print "Initialised perch event detector for bird " + str(self.bird)
 
     def evaluate_event(self):
-        if self.event['data']['position'] == 'FRONT' and self.event['data']['id'] == self.bird:
-            self.stateTransitionCallback(True)
-        else:
-            self.stateTransitionCallback(False)
+        if self.debug:
+            print "Perch event listener for bird " + str(self.bird) + " received event"
+        
+        if self.event['data']['duration'] == 0.0: 
+            if self.event['data']['position'] == 'FRONT' and self.event['data']['id'] == self.bird:
+                if self.debug:
+                    print "Bird " + str(self.bird) + " is perched"
+                self.stateTransitionCallback(True)
+            else:
+                self.stateTransitionCallback(False)
 
+    def print_state(self, state):
+        print "Perch event listener for bird " + str(self.bird) + " attempted state change to " +str(state)
 
 if __name__ == "__main__":
-    listener = EventListener('manna,hou,bisnap','power')
+    listener1 = PerchEventListener('manna,hou,bisnap','perch_sensor',bird=1, debug=True )
+    listener2 = PerchEventListener('manna,hou,bisnap','perch_sensor',bird=2, debug=True )
 
-    signal.signal(signal.SIGINT, listener.stop) 
-    listener.start()
+    def signalHandler(sig, frame):
+        print "\nSignal " + str(sig) + " received."
+        listener1.stop()
+        listener2.stop()
+
+    signal.signal(signal.SIGINT, signalHandler) 
+    listener1.start()
+    listener2.start()
     signal.pause()
-    listener.join()
+    listener1.join()
+    listener2.join()
 
