@@ -11,42 +11,39 @@ from event_emitters import EventEmitter
 
 if __name__ == "__main__":
 
-    cage1_event_listener = PerchEventListener('manna,hou,bisnap','ats_perch',bird=1 )
-    #cage2_event_listener = PerchEventListener('manna,hou,bisnap','ats_perch',bird=2 )
- 
     # Setup event listeners
-    #cage1_event_listener = PerchEventListener( servers='manna,hou,bisnap', topic='perch_sensor', bird=1 )
-    #cage2_event_listener = PerchEventListener( servers='manna,hou,bisnap', topic='perch_sendor', bird=2, debug=True )
-    
+    perch_event_listener = PerchEventListener('manna,hou,bisnap','ats_perch',bird=1 )
+    bout_event_listener = OnOffEventListener('manna,hou,bisnap','ats_bout' )
+ 
     # Setup state monitors
-    cage1_state_monitor = LinearStateMonitor( period=0.1, upwards_gain=0.1, downwards_gain=0.5 )
-    #cage2_state_monitor = LinearStateMonitor( period=0.1, upwards_gain=0.1, downwards_gain=0.5 )
-    cage1_event_listener.stateTransitionCallback = cage1_state_monitor.setState
-    #cage2_event_listener.stateTransitionCallback = cage2_state_monitor.setState
+    perch_state_monitor = LinearStateMonitor( period=0.1, upwards_gain=0.1, downwards_gain=0.1 )
+    bout_state_monitor = LinearStateMonitor( period=0.1, upwards_gain=0.1, downwards_gain=0.1 )
+    perch_event_listener.stateTransitionCallback = perch_state_monitor.setState
+    bout_event_listener.stateTransitionCallback = bout_state_monitor.setState
 
     # Setup metric processor
     metric_processor = ProbabilityProcessor( period=0.1 )
-    metric_processor.getters.append( cage1_state_monitor.getProbability )
-    #metric_processor.getters.append( cage2_state_monitor.getProbability )
+    metric_processor.getters.append( perch_state_monitor.getProbability )
+    metric_processor.getters.append( bout_state_monitor.getProbability )
     
     # Setup thresholders
-    thresholder = Thresholder( upwards_threshold=0.45, downwards_threshold=0.15 )
+    thresholder = Thresholder( upwards_threshold=0.8, downwards_threshold=0.55 )
     metric_processor.setters.append( thresholder.evaluate )
     
     # Setup event builders
-    builder = EventBuilder( bird="1", type="ats_contact" )
+    builder = EventBuilder( bird="1", type="directed" )
     thresholder.emitEvent = builder.evaluate
 
     # Setup event emitters
-    emitter = EventEmitter( 'manna,hou,bisnap','ats_contact')
+    emitter = EventEmitter( 'manna,hou,bisnap','ats_directed')
     builder.send = emitter.send
     
     # Setup and run event processor
     event_processor = EventProcessor()
-    event_processor.tasks.append(cage1_event_listener)
-    event_processor.tasks.append(cage2_event_listener)
-    event_processor.tasks.append(cage1_state_monitor)
-    event_processor.tasks.append(cage2_state_monitor)
+    event_processor.tasks.append(perch_event_listener)
+    event_processor.tasks.append(bout_event_listener)
+    event_processor.tasks.append(perch_state_monitor)
+    event_processor.tasks.append(bout_state_monitor)
     event_processor.tasks.append(metric_processor) 
     event_processor.run()
 

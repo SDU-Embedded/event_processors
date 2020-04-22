@@ -45,6 +45,15 @@ class OnOffEventListener(EventListener):
         if self.event['data']['event'] == 'offset':
             self.stateTransitionCallback(False)
 
+class OnsetEventListener(EventListener):
+    def __init__(self, servers='', topic=''):
+        EventListener.__init__(self, servers, topic)
+        self.stateTransitionCallback = None
+
+    def evaluate_event(self):
+        if self.event['data']['event'] == 'onset':
+            self.stateTransitionCallback(True)
+
 
 class PerchEventListener(EventListener):
     def __init__(self, servers='', topic='', bird=0, debug=False):

@@ -3,6 +3,7 @@
 #
 
 import threading,time
+from datetime import datetime
 
 class StateMonitor(threading.Thread):
     def __init__(self, period=0.01, debug=False):
@@ -59,7 +60,6 @@ class LinearStateMonitor(StateMonitor):
             self.probability = self.probability - self.downwards_gain
             if self.probability < self.probability_min:
                 self.probability = self.probability_min
-
 
 class TwoLevelStateMonitor(StateMonitor):
     def __init__(self, period=0.01, upwards_gain=0.01, downwards_gain=0.01, debug=False):

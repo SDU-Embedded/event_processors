@@ -11,7 +11,7 @@ from event_emitters import EventEmitter
 if __name__ == "__main__":
 
     # Feed from file
-    feeder = FileFeeder('/home/leon/unbiased.csv', period=0.003)
+    feeder = FileFeeder('/home/leon/ws/science/bats/unbiased.csv', period=0.003)
 
     # Setup thresholders
     thresholder = Thresholder( upwards_threshold=0.25, downwards_threshold=0.1 )

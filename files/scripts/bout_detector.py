@@ -13,12 +13,12 @@ if __name__ == "__main__":
 
     
     # Setup event listeners
-    power_event_listener = OnOffEventListener( servers='manna,hou,bisnap', topic='power' )
-    entropy_event_listener = OnOffEventListener( servers='manna,hou,bisnap', topic='entropy' )
+    power_event_listener = OnOffEventListener( servers='manna,hou,bisnap', topic='ats_power' )
+    entropy_event_listener = OnOffEventListener( servers='manna,hou,bisnap', topic='ats_entropy' )
     
     # Setup state monitors
-    power_state_monitor = TwoLevelStateMonitor( period=0.01, upwards_gain=0.03, downwards_gain=0.005 )
-    entropy_state_monitor = TwoLevelStateMonitor( period=0.01, upwards_gain=0.03, downwards_gain=0.005 )
+    power_state_monitor = TwoLevelStateMonitor( period=0.01, upwards_gain=0.035, downwards_gain=0.005 )
+    entropy_state_monitor = TwoLevelStateMonitor( period=0.01, upwards_gain=0.035, downwards_gain=0.005 )
     
     power_event_listener.stateTransitionCallback = power_state_monitor.setState
     entropy_event_listener.stateTransitionCallback = entropy_state_monitor.setState
@@ -30,7 +30,7 @@ if __name__ == "__main__":
     metric_processor.getters.append( entropy_state_monitor.getProbability )
     
     # Setup thresholders
-    thresholder = Thresholder( upwards_threshold=0.85, downwards_threshold=0.50 )
+    thresholder = Thresholder( upwards_threshold=0.8, downwards_threshold=0.10 )
     metric_processor.setters.append( thresholder.evaluate )
     
     # Setup event builders
