@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 from event_processors import EventProcessor
-from event_listeners import PerchEventListener
+from event_listeners import PerchEventListener,OnOffEventListener
 from state_monitors import LinearStateMonitor
 from metric_processors import ProbabilityProcessor
 from thresholders import Thresholder
@@ -22,7 +22,7 @@ if __name__ == "__main__":
     bout_event_listener.stateTransitionCallback = bout_state_monitor.setState
 
     # Setup metric processor
-    metric_processor = ProbabilityProcessor( period=0.1 )
+    metric_processor = ProbabilityProcessor( period=0.1, debug=True )
     metric_processor.getters.append( perch_state_monitor.getProbability )
     metric_processor.getters.append( bout_state_monitor.getProbability )
     
