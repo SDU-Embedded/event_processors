@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+import os
 from event_processors import EventProcessor
 from event_listeners import OnOffEventListener
 from state_monitors import TwoLevelStateMonitor
@@ -10,7 +11,7 @@ from event_builders import EventBuilder
 from event_emitters import EventEmitter
 
 if __name__ == "__main__":
-
+    bird_id = os.getenv('BIRD')
     
     # Setup event listeners
     power_event_listener = OnOffEventListener( servers='manna,hou,bisnap', topic='ats_power' )
@@ -34,7 +35,7 @@ if __name__ == "__main__":
     metric_processor.setters.append( thresholder.evaluate )
     
     # Setup event builders
-    builder = EventBuilder( bird="1", type="bout" )
+    builder = EventBuilder( bird=str(bird_id), type="bout" )
     thresholder.emitEvent = builder.evaluate
 
     # Setup event emitters

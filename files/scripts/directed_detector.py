@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-
+import os
 from event_processors import EventProcessor
 from event_listeners import PerchEventListener,OnOffEventListener
 from state_monitors import LinearStateMonitor
@@ -11,6 +11,7 @@ from event_emitters import EventEmitter
 
 if __name__ == "__main__":
 
+    bird_id = os.getenv('BIRD')
     # Setup event listeners
     perch_event_listener = PerchEventListener('manna,hou,bisnap','ats_perch',bird=1 )
     bout_event_listener = OnOffEventListener('manna,hou,bisnap','ats_bout' )
@@ -31,7 +32,7 @@ if __name__ == "__main__":
     metric_processor.setters.append( thresholder.evaluate )
     
     # Setup event builders
-    builder = EventBuilder( bird="1", type="directed" )
+    builder = EventBuilder( bird=str(bird_id), type="directed" )
     thresholder.emitEvent = builder.evaluate
 
     # Setup event emitters
